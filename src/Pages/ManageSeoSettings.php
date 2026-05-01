@@ -5,18 +5,16 @@ namespace Madbox99\FilamentSeo\Pages;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Forms\Form;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Schema;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Madbox99\FilamentSeo\FilamentSeoPlugin;
 use Madbox99\FilamentSeo\Models\SeoSetting;
 use UnitEnum;
 
-class ManageSeoSettings extends Page implements HasForms
+class ManageSeoSettings extends Page
 {
-    use InteractsWithForms;
 
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-magnifying-glass';
 
@@ -79,11 +77,11 @@ class ManageSeoSettings extends Page implements HasForms
         $this->form->fill($settings->toArray());
     }
 
-    public function form(Form $form): Form
+    public function form(Schema $form): Schema
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Defaults')
+                Section::make('Defaults')
                     ->schema([
                         Forms\Components\TextInput::make('default_title_pattern')
                             ->label('Title Pattern')
@@ -97,18 +95,18 @@ class ManageSeoSettings extends Page implements HasForms
                             ->image()
                             ->directory('seo'),
                     ]),
-                Forms\Components\Section::make('Robots.txt')
+                Section::make('Robots.txt')
                     ->schema([
                         Forms\Components\Textarea::make('robots_txt')
                             ->label('robots.txt Content')
                             ->rows(8),
                     ]),
-                Forms\Components\Section::make('Sitemap')
+                Section::make('Sitemap')
                     ->schema([
                         Forms\Components\TagsInput::make('sitemap_excluded_urls')
                             ->label('Excluded URLs from Sitemap'),
                     ]),
-                Forms\Components\Section::make('Schema.org')
+                Section::make('Schema.org')
                     ->schema([
                         Forms\Components\Select::make('schema_org_type')
                             ->label('Schema Type')

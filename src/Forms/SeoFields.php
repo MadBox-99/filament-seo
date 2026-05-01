@@ -3,12 +3,13 @@
 namespace Madbox99\FilamentSeo\Forms;
 
 use Filament\Forms;
+use Filament\Schemas\Components\Section;
 
 class SeoFields
 {
-    public static function make(string $relationship = 'seoMeta'): Forms\Components\Section
+    public static function make(string $relationship = 'seoMeta'): Section
     {
-        return Forms\Components\Section::make('SEO')
+        return Section::make('SEO')
             ->relationship($relationship)
             ->schema(static::schema())
             ->collapsed();
