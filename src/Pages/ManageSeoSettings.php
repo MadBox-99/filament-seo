@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas;
+use Filament\Schemas\Schema;
 use Madbox99\FilamentSeo\FilamentSeoPlugin;
 use Madbox99\FilamentSeo\Models\SeoSetting;
 use UnitEnum;
@@ -80,7 +81,7 @@ class ManageSeoSettings extends Page implements HasForms
         $this->form->fill($settings->toArray());
     }
 
-    public function form(Form $form): Form
+    public function form(Form|Schema $form): Form|Schema
     {
         return $form
             ->schema([
