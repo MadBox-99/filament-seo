@@ -4,6 +4,7 @@ namespace Madbox99\FilamentSeo;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\SeoRouteResource;
 use Madbox99\FilamentSeo\Pages\ManageSeoSettings;
 
 class FilamentSeoPlugin implements Plugin
@@ -64,6 +65,10 @@ class FilamentSeoPlugin implements Plugin
     {
         $panel->pages([
             ManageSeoSettings::class,
+        ]);
+
+        $panel->resources([
+            SeoRouteResource::class,
         ]);
     }
 

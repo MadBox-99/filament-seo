@@ -2,10 +2,17 @@
 
 namespace Madbox99\FilamentSeo\Tests;
 
+use BladeUI\Heroicons\BladeHeroiconsServiceProvider;
+use BladeUI\Icons\BladeIconsServiceProvider;
+use Filament\Actions\ActionsServiceProvider;
 use Filament\FilamentServiceProvider;
 use Filament\Forms\FormsServiceProvider;
+use Filament\Infolists\InfolistsServiceProvider;
 use Filament\Notifications\NotificationsServiceProvider;
+use Filament\Schemas\SchemasServiceProvider;
 use Filament\Support\SupportServiceProvider;
+use Filament\Tables\TablesServiceProvider;
+use Filament\Widgets\WidgetsServiceProvider;
 use Illuminate\Support\ViewErrorBag;
 use Livewire\LivewireServiceProvider;
 use Madbox99\FilamentSeo\FilamentSeoServiceProvider;
@@ -28,9 +35,16 @@ abstract class TestCase extends BaseTestCase
     {
         return [
             LivewireServiceProvider::class,
+            BladeIconsServiceProvider::class,
+            BladeHeroiconsServiceProvider::class,
             SupportServiceProvider::class,
+            SchemasServiceProvider::class,
+            ActionsServiceProvider::class,
             FormsServiceProvider::class,
+            InfolistsServiceProvider::class,
             NotificationsServiceProvider::class,
+            TablesServiceProvider::class,
+            WidgetsServiceProvider::class,
             FilamentServiceProvider::class,
             FilamentSeoServiceProvider::class,
             AdminPanelProvider::class,
