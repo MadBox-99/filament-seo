@@ -16,6 +16,7 @@ class FilamentSeoServiceProvider extends PackageServiceProvider
         $package->name(static::$name)
             ->hasConfigFile()
             ->hasViews()
+            ->hasTranslations()
             ->discoversMigrations()
             ->runsMigrations();
     }

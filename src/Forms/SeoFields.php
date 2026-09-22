@@ -7,36 +7,61 @@ use Filament\Schemas;
 
 class SeoFields
 {
-    public static function make(string $relationship = 'seoMeta'): Schemas\Components\Section
+    public static function make(string $relationship = 'seoMeta', string $defaultOgType = 'website'): Schemas\Components\Section
     {
-        return Schemas\Components\Section::make('SEO')
+        return Schemas\Components\Section::make(__('filament-seo::filament-seo.section.heading'))
             ->relationship($relationship)
-            ->schema(static::schema())
+            ->schema(static::schema($defaultOgType))
             ->collapsed();
     }
 
     /** @return array<Forms\Components\Component> */
-    public static function schema(): array
+    public static function schema(string $defaultOgType = 'website'): array
     {
         return [
             Forms\Components\TextInput::make('title')
-                ->label('SEO Title')
+                ->label(__('filament-seo::filament-seo.fields.title'))
                 ->maxLength(70),
             Forms\Components\Textarea::make('description')
-                ->label('Meta Description')
+                ->label(__('filament-seo::filament-seo.fields.description'))
                 ->maxLength(160)
                 ->rows(3),
             Forms\Components\TextInput::make('keywords')
-                ->label('Keywords')
+                ->label(__('filament-seo::filament-seo.fields.keywords'))
                 ->maxLength(255),
             Forms\Components\TextInput::make('canonical_url')
-                ->label('Canonical URL')
+                ->label(__('filament-seo::filament-seo.fields.canonical_url'))
                 ->url()
                 ->maxLength(255),
             Forms\Components\Toggle::make('no_index')
-                ->label('Hide from search engines (noindex)'),
+                ->label(__('filament-seo::filament-seo.fields.no_index')),
             Forms\Components\Toggle::make('no_follow')
-                ->label('No follow links (nofollow)'),
+                ->label(__('filament-seo::filament-seo.fields.no_follow')),
+            Forms\Components\Select::make('og_type')
+                ->label(__('filament-seo::filament-seo.fields.og_type'))
+                ->options([
+                    'website' => 'website',
+                    'article' => 'article',
+                    'product' => 'product',
+                ])
+                ->default($defaultOgType),
+            Forms\Components\FileUpload::make('og_image')
+                ->label(__('filament-seo::filament-seo.fields.og_image'))
+                ->image()
+                ->disk('public')
+                ->directory('seo')
+                ->visibility('public'),
+            Forms\Components\Textarea::make('schema_markup')
+                ->label(__('filament-seo::filament-seo.fields.schema_markup'))
+                ->helperText(__('filament-seo::filament-seo.fields.schema_markup_help'))
+                ->rows(5)
+                ->rules(['nullable', 'json'])
+                ->formatStateUsing(fn ($state): ?string => is_array($state)
+                    ? json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+                    : $state)
+                ->dehydrateStateUsing(fn (?string $state): ?array => filled($state)
+                    ? json_decode($state, true)
+                    : null),
         ];
     }
 }
