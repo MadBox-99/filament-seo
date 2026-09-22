@@ -8,7 +8,11 @@
   a meglévő polimorf `seo_metas` rekordokon keresztül.
 - `seo:sync-routes` artisan parancs, ami a configból tölti fel a route-listát.
 - `SeoManager` feloldó és `Seo` facade: mezőnkénti visszaesés a modell SEO-járól
-  az aktuális route rekordjára, onnan a globális beállításokra.
+  az aktuális route rekordjára, onnan a globális beállításokra (title, description,
+  keywords, canonical, og:type, og:image). Kivétel a `no_index`/`no_follow`: ezek
+  nem esnek vissza mezőnként, hanem logikai VAGY-gyal kombinálódnak a modell és a
+  route rekord között, globális alapértelmezés nélkül — ha bármelyik rekord
+  noindexet/nofollow-t ír elő, az érvényesül.
 - `ProvidesSchemaOrg` interfész: a modellek saját JSON-LD blokkokat adhatnak.
 - `<x-filament-seo::head />` Blade komponens a meta tagek és a JSON-LD kiírására.
 - `SeoRouteResource`: az „Oldalak SEO-ja" lista az admin panelen, csak szerkesztéssel.

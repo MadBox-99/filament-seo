@@ -4,8 +4,8 @@ SEO plugin for [Filament](https://filamentphp.com) v5 — meta tags, Open Graph,
 Schema.org and robots control, managed from one admin panel. Global settings
 live in a singleton page; per-page SEO for fixed named routes is a plain
 resource. Both feed the same public API: a Blade component that renders the
-`<head>` tags for any page, resolved model-first, then route, then global
-defaults.
+`<head>` tags for any page, with most fields resolved model-first, then route,
+then global defaults — robots directives are the exception (see below).
 
 ## Fix oldalak SEO-ja
 
@@ -49,6 +49,7 @@ keletkezzen két `<title>` tag:
 Ahol van konkrét modell, add meg a feloldónak:
 
 ```php
+use Illuminate\Support\Facades\Storage;
 use Madbox99\FilamentSeo\Facades\Seo;
 
 Seo::for($product, fallbackTitle: $product->name)
@@ -56,7 +57,14 @@ Seo::for($product, fallbackTitle: $product->name)
 ```
 
 A feloldás mezőnként esik vissza: a modell SEO-rekordja, majd az aktuális route
-rekordja, végül a globális beállítások.
+rekordja, végül a globális beállítások. Ez igaz a title, description, keywords,
+canonical, og:type és og:image mezőkre.
+
+Kivétel a `no_index` és a `no_follow`: ezek nem esnek vissza mezőnként, hanem
+logikai VAGY-gyal kombinálódnak a modell és a route rekord között, és nincs
+hozzájuk globális alapértelmezés. Ha akár a modell, akár a route rekordja
+noindexet vagy nofollow-t ír elő, az oldal noindex/nofollow marad — a másik
+rekord "engedékenyebb" beállítása nem írja felül.
 
 A site nevét a projekt adja meg, jellemzően az `AppServiceProvider::boot()`-ban:
 
@@ -69,6 +77,7 @@ SeoManager::siteNameUsing(fn () => resolve(GeneralSettings::class)->site_name);
 ## Saját JSON-LD modellenként
 
 ```php
+use Illuminate\Database\Eloquent\Model;
 use Madbox99\FilamentSeo\Contracts\ProvidesSchemaOrg;
 
 class Product extends Model implements ProvidesSchemaOrg
