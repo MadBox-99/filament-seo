@@ -1659,6 +1659,7 @@ git commit -m "Add the x-filament-seo::head component"
 
 **Interfaces:**
 - Consumes: `SeoRoute` (Task 1), `SeoFields::make()` (Task 2), a `filament-seo::filament-seo.routes.*` fordítási kulcsok (Task 2).
+- **A tesztek `Livewire\Livewire::test()`-et használnak, nem a `Pest\Livewire\livewire()` helpert:** a `pestphp/pest-plugin-livewire` nincs a csomag dev-függőségei között, és ez a terv nem vesz fel újat. A `livewire/livewire` a Filamenten keresztül jelen van.
 - Produces: `Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\SeoRouteResource`, a plugin regisztrálja. `canCreate()` és `canDelete()` egyaránt `false` — a sorokat a config és a sync parancs határozza meg.
 
 - [ ] **Step 1: Write the failing test**
@@ -1673,8 +1674,7 @@ use Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\Pages\ListSeoRoutes;
 use Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\SeoRouteResource;
 use Madbox99\FilamentSeo\Models\SeoRoute;
 use Madbox99\FilamentSeo\Tests\Fixtures\User;
-
-use function Pest\Livewire\livewire;
+use Livewire\Livewire;
 
 beforeEach(function () {
     $this->actingAs(User::create([
@@ -1701,7 +1701,7 @@ it('lists the synced routes', function () {
     SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal', 'sort_order' => 1]);
     SeoRoute::create(['route_name' => 'contact', 'label' => 'Kapcsolat', 'sort_order' => 2]);
 
-    livewire(ListSeoRoutes::class)
+    Livewire::test(ListSeoRoutes::class)
         ->assertSuccessful()
         ->assertSee('Főoldal')
         ->assertSee('Kapcsolat');
@@ -1710,7 +1710,7 @@ it('lists the synced routes', function () {
 it('saves the seo meta from the edit form', function () {
     $route = SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal']);
 
-    livewire(EditSeoRoute::class, ['record' => $route->getKey()])
+    Livewire::test(EditSeoRoute::class, ['record' => $route->getKey()])
         ->assertSuccessful()
         ->fillForm([
             'seoMeta.title' => 'Kezdőlap',
@@ -1726,7 +1726,7 @@ it('saves the seo meta from the edit form', function () {
 it('rejects invalid json in the schema markup field', function () {
     $route = SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal']);
 
-    livewire(EditSeoRoute::class, ['record' => $route->getKey()])
+    Livewire::test(EditSeoRoute::class, ['record' => $route->getKey()])
         ->fillForm(['seoMeta.schema_markup' => '{ ez nem json'])
         ->call('save')
         ->assertHasFormErrors(['seoMeta.schema_markup']);
