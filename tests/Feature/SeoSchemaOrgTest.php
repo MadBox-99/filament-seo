@@ -42,6 +42,23 @@ it('drops empty values from the organization block', function () {
     expect(Seo::resolve()->schemas[0])->not->toHaveKey('description');
 });
 
+it('keeps zero-like values while dropping empty ones from the organization block', function () {
+    SeoSetting::current()->update([
+        'schema_org_data' => [
+            'name' => 'Teszt Kft.',
+            'description' => '',
+            'foundingYear' => '0',
+        ],
+    ]);
+
+    $this->get('/');
+
+    $organisation = Seo::resolve()->schemas[0];
+
+    expect($organisation)->not->toHaveKey('description')
+        ->and($organisation['foundingYear'])->toBe('0');
+});
+
 it('emits no global blocks outside the home route', function () {
     $this->get('/cikk');
 

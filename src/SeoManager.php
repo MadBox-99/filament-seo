@@ -86,7 +86,7 @@ class SeoManager
                 $this->ogImage,
                 $settings->default_og_image,
             ])),
-            schemas: $this->schemas($modelMeta, $settings),
+            schemas: $this->schemas($modelMeta, $routeMeta, $settings),
         );
     }
 
@@ -161,7 +161,7 @@ class SeoManager
     /**
      * @return list<array<string, mixed>>
      */
-    protected function schemas(?SeoMeta $modelMeta, SeoSetting $settings): array
+    protected function schemas(?SeoMeta $modelMeta, ?SeoMeta $routeMeta, SeoSetting $settings): array
     {
         $schemas = [];
 
@@ -173,7 +173,7 @@ class SeoManager
             $schemas = [...$schemas, ...$this->model->toSchemaOrg()];
         }
 
-        foreach ($this->handWrittenSchemas($modelMeta) as $block) {
+        foreach ($this->handWrittenSchemas($modelMeta, $routeMeta) as $block) {
             $schemas[] = $block;
         }
 
@@ -215,9 +215,9 @@ class SeoManager
     /**
      * @return list<array<string, mixed>>
      */
-    protected function handWrittenSchemas(?SeoMeta $modelMeta): array
+    protected function handWrittenSchemas(?SeoMeta $modelMeta, ?SeoMeta $routeMeta): array
     {
-        $markup = $modelMeta?->schema_markup ?? $this->routeMeta()?->schema_markup;
+        $markup = $modelMeta?->schema_markup ?? $routeMeta?->schema_markup;
 
         if (! is_array($markup) || $markup === []) {
             return [];
