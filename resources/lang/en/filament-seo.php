@@ -21,6 +21,7 @@ return [
         'plural_label' => 'Page SEO',
         'columns' => [
             'label' => 'Page',
+            'route_name' => 'Route',
             'title' => 'SEO title',
             'has_schema' => 'JSON-LD',
             'updated_at' => 'Modified',

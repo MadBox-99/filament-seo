@@ -11,9 +11,11 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Database\Eloquent\Model;
 use Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\Pages\EditSeoRoute;
 use Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\Pages\ListSeoRoutes;
+use Madbox99\FilamentSeo\FilamentSeoPlugin;
 use Madbox99\FilamentSeo\Forms\SeoFields;
 use Madbox99\FilamentSeo\Models\SeoRoute;
 use UnitEnum;
@@ -27,6 +29,45 @@ class SeoRouteResource extends Resource
     protected static string|UnitEnum|null $navigationGroup = 'SEO';
 
     protected static ?int $navigationSort = 2;
+
+    #[\Override]
+    public static function getNavigationGroup(): string|UnitEnum|null
+    {
+        if (filament()->hasPlugin('filament-seo')) {
+            /** @var FilamentSeoPlugin $plugin */
+            $plugin = filament()->getPlugin('filament-seo');
+
+            return $plugin->getNavigationGroup() ?? static::$navigationGroup;
+        }
+
+        return static::$navigationGroup;
+    }
+
+    #[\Override]
+    public static function getNavigationIcon(): string|BackedEnum|Htmlable|null
+    {
+        if (filament()->hasPlugin('filament-seo')) {
+            /** @var FilamentSeoPlugin $plugin */
+            $plugin = filament()->getPlugin('filament-seo');
+
+            return $plugin->getNavigationIcon() ?? static::$navigationIcon;
+        }
+
+        return static::$navigationIcon;
+    }
+
+    #[\Override]
+    public static function getNavigationSort(): ?int
+    {
+        if (filament()->hasPlugin('filament-seo')) {
+            /** @var FilamentSeoPlugin $plugin */
+            $plugin = filament()->getPlugin('filament-seo');
+
+            return $plugin->getNavigationSort() ?? static::$navigationSort;
+        }
+
+        return static::$navigationSort;
+    }
 
     public static function getModelLabel(): string
     {
@@ -62,7 +103,7 @@ class SeoRouteResource extends Resource
                     ->disabled()
                     ->dehydrated(false),
                 TextInput::make('route_name')
-                    ->label('Route')
+                    ->label(__('filament-seo::filament-seo.routes.columns.route_name'))
                     ->disabled()
                     ->dehydrated(false),
             ])->columns(2),

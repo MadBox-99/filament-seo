@@ -21,6 +21,7 @@ return [
         'plural_label' => 'Oldalak SEO-ja',
         'columns' => [
             'label' => 'Oldal',
+            'route_name' => 'Route (rendszernév)',
             'title' => 'SEO cím',
             'has_schema' => 'JSON-LD',
             'updated_at' => 'Módosítva',

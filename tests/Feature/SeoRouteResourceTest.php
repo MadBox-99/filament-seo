@@ -62,3 +62,18 @@ it('rejects invalid json in the schema markup field', function () {
         ->call('save')
         ->assertHasFormErrors(['seoMeta.schema_markup']);
 });
+
+it('does not let a save alter the label or route name', function () {
+    $route = SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal']);
+
+    Livewire::test(EditSeoRoute::class, ['record' => $route->getKey()])
+        ->fillForm([
+            'label' => 'Átírt címke',
+            'route_name' => 'atirt.route',
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($route->refresh()->label)->toBe('Főoldal')
+        ->and($route->route_name)->toBe('home');
+});
