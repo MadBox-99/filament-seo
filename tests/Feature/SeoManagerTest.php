@@ -20,6 +20,10 @@ beforeEach(function () {
     Seo::reset();
 });
 
+afterEach(function () {
+    SeoManager::siteNameUsing(null);
+});
+
 it('falls back to the global description when nothing else is set', function () {
     $data = Seo::resolve();
 
@@ -95,6 +99,30 @@ it('combines noindex and nofollow', function () {
     expect(Seo::for($post)->resolve()->robots)->toBe('noindex, nofollow');
 });
 
+it('keeps the route nofollow directive even when the model record sets no flags', function () {
+    SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal'])
+        ->seoMeta()->create(['no_follow' => true]);
+
+    $post = Post::create(['title' => 'Cikk']);
+    $post->seoMeta()->create(['title' => 'Cikk SEO címe']);
+
+    $this->get('/');
+
+    expect(Seo::for($post)->resolve()->robots)->toBe('index, nofollow');
+});
+
+it('keeps the route noindex directive even when the model record sets no flags', function () {
+    SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal'])
+        ->seoMeta()->create(['no_index' => true]);
+
+    $post = Post::create(['title' => 'Cikk']);
+    $post->seoMeta()->create(['title' => 'Cikk SEO címe']);
+
+    $this->get('/');
+
+    expect(Seo::for($post)->resolve()->robots)->toBe('noindex, follow');
+});
+
 it('defaults the canonical url to the current url', function () {
     $this->get('/');
 
@@ -137,4 +165,10 @@ it('reads the og type from the seo meta record', function () {
 
 it('returns no schemas yet', function () {
     expect(Seo::resolve()->schemas)->toBe([]);
+});
+
+it('restores the default site name resolution when siteNameUsing is cleared', function () {
+    SeoManager::siteNameUsing(null);
+
+    expect(Seo::siteName())->toBe((string) config('app.name'));
 });

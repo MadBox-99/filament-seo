@@ -10,6 +10,7 @@ use Madbox99\FilamentSeo\SeoManager;
  * @method static SeoManager ogImage(?string $url)
  * @method static SeoManager reset()
  * @method static string siteName()
+ * @method static void siteNameUsing(?\Closure $callback)
  * @method static \Madbox99\FilamentSeo\Data\SeoData resolve()
  *
  * @see SeoManager

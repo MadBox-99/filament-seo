@@ -20,7 +20,7 @@ class SeoManager
 
     protected ?string $ogImage = null;
 
-    public static function siteNameUsing(Closure $callback): void
+    public static function siteNameUsing(?Closure $callback): void
     {
         static::$siteNameResolver = $callback;
     }
@@ -77,7 +77,7 @@ class SeoManager
                 $routeMeta?->canonical_url,
                 url()->current(),
             ]),
-            robots: $this->robots($modelMeta ?? $routeMeta),
+            robots: $this->robots($modelMeta, $routeMeta),
             ogType: $this->firstFilled([$modelMeta?->og_type, $routeMeta?->og_type]) ?? 'website',
             ogImage: $this->imageUrl($this->firstFilled([
                 $modelMeta?->og_image,
@@ -132,17 +132,16 @@ class SeoManager
         return str_replace(['{title}', '{site_name}'], [$title, $siteName], $pattern);
     }
 
-    protected function robots(?SeoMeta $meta): ?string
+    protected function robots(?SeoMeta $modelMeta, ?SeoMeta $routeMeta): ?string
     {
-        if (! $meta instanceof SeoMeta) {
+        $noIndex = (bool) ($modelMeta?->no_index) || (bool) ($routeMeta?->no_index);
+        $noFollow = (bool) ($modelMeta?->no_follow) || (bool) ($routeMeta?->no_follow);
+
+        if (! $noIndex && ! $noFollow) {
             return null;
         }
 
-        if (! $meta->no_index && ! $meta->no_follow) {
-            return null;
-        }
-
-        return ($meta->no_index ? 'noindex' : 'index').', '.($meta->no_follow ? 'nofollow' : 'follow');
+        return ($noIndex ? 'noindex' : 'index').', '.($noFollow ? 'nofollow' : 'follow');
     }
 
     protected function imageUrl(?string $path): ?string
