@@ -5,6 +5,7 @@ namespace Madbox99\FilamentSeo;
 use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Madbox99\FilamentSeo\Contracts\ProvidesSchemaOrg;
 use Madbox99\FilamentSeo\Data\SeoData;
 use Madbox99\FilamentSeo\Models\SeoMeta;
 use Madbox99\FilamentSeo\Models\SeoRoute;
@@ -85,7 +86,7 @@ class SeoManager
                 $this->ogImage,
                 $settings->default_og_image,
             ])),
-            schemas: [],
+            schemas: $this->schemas($modelMeta, $settings),
         );
     }
 
@@ -155,6 +156,75 @@ class SeoManager
         }
 
         return Storage::disk('public')->url($path);
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    protected function schemas(?SeoMeta $modelMeta, SeoSetting $settings): array
+    {
+        $schemas = [];
+
+        if ($this->isHomeRoute()) {
+            $schemas = $this->globalSchemas($settings);
+        }
+
+        if ($this->model instanceof ProvidesSchemaOrg) {
+            $schemas = [...$schemas, ...$this->model->toSchemaOrg()];
+        }
+
+        foreach ($this->handWrittenSchemas($modelMeta) as $block) {
+            $schemas[] = $block;
+        }
+
+        return $schemas;
+    }
+
+    protected function isHomeRoute(): bool
+    {
+        $homeRoute = config('filament-seo.home_route', 'home');
+
+        return is_string($homeRoute) && request()->route()?->getName() === $homeRoute;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    protected function globalSchemas(SeoSetting $settings): array
+    {
+        $organisation = array_filter(
+            (array) ($settings->schema_org_data ?? []),
+            fn ($value): bool => filled($value),
+        );
+
+        return [
+            [
+                '@context' => 'https://schema.org',
+                '@type' => $settings->schema_org_type ?: 'Organization',
+                ...$organisation,
+            ],
+            [
+                '@context' => 'https://schema.org',
+                '@type' => 'WebSite',
+                'name' => $this->siteName(),
+                'url' => url('/'),
+            ],
+        ];
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    protected function handWrittenSchemas(?SeoMeta $modelMeta): array
+    {
+        $markup = $modelMeta?->schema_markup ?? $this->routeMeta()?->schema_markup;
+
+        if (! is_array($markup) || $markup === []) {
+            return [];
+        }
+
+        // Egyetlen blokk (asszociatív tömb) vagy blokkok listája is jöhet.
+        return array_is_list($markup) ? array_values($markup) : [$markup];
     }
 
     /**
