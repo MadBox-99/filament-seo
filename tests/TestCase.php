@@ -49,6 +49,7 @@ abstract class TestCase extends BaseTestCase
         $app['config']->set('filament-seo.table_names', [
             'seo_metas' => 'seo_metas',
             'seo_settings' => 'seo_settings',
+            'seo_routes' => 'seo_routes',
         ]);
 
         $app['config']->set('app.key', 'base64:9InmilS+Be4PN9ArF+ZvlOszL6gc1pLRf1hhZcgJgxI=');
