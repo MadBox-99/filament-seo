@@ -1,11 +1,11 @@
 <?php
 
+use Livewire\Livewire;
 use Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\Pages\EditSeoRoute;
 use Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\Pages\ListSeoRoutes;
 use Madbox99\FilamentSeo\Filament\Resources\SeoRoutes\SeoRouteResource;
 use Madbox99\FilamentSeo\Models\SeoRoute;
 use Madbox99\FilamentSeo\Tests\Fixtures\User;
-use Livewire\Livewire;
 
 beforeEach(function () {
     $this->actingAs(User::create([

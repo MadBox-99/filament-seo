@@ -1,11 +1,12 @@
 <?php
 
-use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
+use Illuminate\Support\Facades\Schema;
 use Madbox99\FilamentSeo\Forms\SeoFields;
 
 it('returns a Section component from make()', function () {
@@ -144,5 +145,5 @@ it('keeps the English labels unchanged', function () {
 });
 
 it('adds an og_image column to the seo metas table', function () {
-    expect(Illuminate\Support\Facades\Schema::getColumnListing('seo_metas'))->toContain('og_image');
+    expect(Schema::getColumnListing('seo_metas'))->toContain('og_image');
 });

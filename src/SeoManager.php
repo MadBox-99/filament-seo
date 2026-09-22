@@ -194,7 +194,7 @@ class SeoManager
     {
         $organisation = array_filter(
             (array) ($settings->schema_org_data ?? []),
-            fn ($value): bool => filled($value),
+            filled(...),
         );
 
         return [

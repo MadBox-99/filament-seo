@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Madbox99\FilamentSeo\Facades\Seo;
 use Madbox99\FilamentSeo\Models\SeoRoute;
 use Madbox99\FilamentSeo\Models\SeoSetting;
@@ -149,7 +150,7 @@ it('turns a stored disk path into a public url', function () {
     $post->seoMeta()->create(['og_image' => 'seo/kep.png']);
 
     expect(Seo::for($post)->resolve()->ogImage)
-        ->toBe(Illuminate\Support\Facades\Storage::disk('public')->url('seo/kep.png'));
+        ->toBe(Storage::disk('public')->url('seo/kep.png'));
 });
 
 it('defaults the og type to website', function () {

@@ -6,7 +6,6 @@ namespace Madbox99\FilamentSeo;
 
 use Illuminate\Support\Facades\Blade;
 use Madbox99\FilamentSeo\Console\SyncSeoRoutesCommand;
-use Madbox99\FilamentSeo\SeoManager;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
