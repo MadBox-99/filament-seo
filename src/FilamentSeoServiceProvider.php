@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Madbox99\FilamentSeo;
 
+use Illuminate\Support\Facades\Blade;
 use Madbox99\FilamentSeo\Console\SyncSeoRoutesCommand;
 use Madbox99\FilamentSeo\SeoManager;
 use Spatie\LaravelPackageTools\Package;
@@ -27,5 +28,10 @@ class FilamentSeoServiceProvider extends PackageServiceProvider
     public function packageRegistered(): void
     {
         $this->app->singleton(SeoManager::class);
+    }
+
+    public function packageBooted(): void
+    {
+        Blade::anonymousComponentNamespace('filament-seo::components', 'filament-seo');
     }
 }
