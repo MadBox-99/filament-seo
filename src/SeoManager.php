@@ -155,7 +155,7 @@ class SeoManager
             return $path;
         }
 
-        return Storage::disk('public')->url($path);
+        return Storage::disk(config('filament-seo.og_image_disk', 'public'))->url($path);
     }
 
     /**
@@ -197,19 +197,24 @@ class SeoManager
             filled(...),
         );
 
-        return [
-            [
+        $schemas = [];
+
+        if ($organisation !== []) {
+            $schemas[] = [
                 '@context' => 'https://schema.org',
                 '@type' => $settings->schema_org_type ?: 'Organization',
                 ...$organisation,
-            ],
-            [
-                '@context' => 'https://schema.org',
-                '@type' => 'WebSite',
-                'name' => $this->siteName(),
-                'url' => url('/'),
-            ],
+            ];
+        }
+
+        $schemas[] = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebSite',
+            'name' => $this->siteName(),
+            'url' => url('/'),
         ];
+
+        return $schemas;
     }
 
     /**
@@ -217,7 +222,7 @@ class SeoManager
      */
     protected function handWrittenSchemas(?SeoMeta $modelMeta, ?SeoMeta $routeMeta): array
     {
-        $markup = $modelMeta?->schema_markup ?? $routeMeta?->schema_markup;
+        $markup = filled($modelMeta?->schema_markup) ? $modelMeta->schema_markup : $routeMeta?->schema_markup;
 
         if (! is_array($markup) || $markup === []) {
             return [];

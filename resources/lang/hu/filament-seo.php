@@ -15,6 +15,7 @@ return [
         'og_image' => 'Megosztási kép (OG)',
         'schema_markup' => 'Egyedi JSON-LD (schema.org)',
         'schema_markup_help' => 'Opcionális, érvényes JSON. Az automatikusan generált structured data mellé kerül.',
+        'schema_markup_not_object' => 'Az egyedi JSON-LD csak JSON objektum vagy tömb lehet, önálló érték nem.',
     ],
     'routes' => [
         'label' => 'Oldal SEO',

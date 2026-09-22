@@ -153,6 +153,17 @@ it('turns a stored disk path into a public url', function () {
         ->toBe(Storage::disk('public')->url('seo/kep.png'));
 });
 
+it('honours a non-default configured og image disk', function () {
+    config()->set('filament-seo.og_image_disk', 'og_images');
+    Storage::fake('og_images');
+
+    $post = Post::create(['title' => 'Cikk']);
+    $post->seoMeta()->create(['og_image' => 'seo/kep.png']);
+
+    expect(Seo::for($post)->resolve()->ogImage)
+        ->toBe(Storage::disk('og_images')->url('seo/kep.png'));
+});
+
 it('defaults the og type to website', function () {
     expect(Seo::resolve()->ogType)->toBe('website');
 });
@@ -164,7 +175,7 @@ it('reads the og type from the seo meta record', function () {
     expect(Seo::for($post)->resolve()->ogType)->toBe('article');
 });
 
-it('returns no schemas yet', function () {
+it('produces no schemas outside a matched route', function () {
     expect(Seo::resolve()->schemas)->toBe([]);
 });
 

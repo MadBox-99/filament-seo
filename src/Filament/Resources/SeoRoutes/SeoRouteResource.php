@@ -115,6 +115,7 @@ class SeoRouteResource extends Resource
     {
         return $table
             ->defaultSort('sort_order')
+            ->modifyQueryUsing(fn ($query) => $query->with('seoMeta'))
             ->columns([
                 TextColumn::make('label')
                     ->label(__('filament-seo::filament-seo.routes.columns.label'))

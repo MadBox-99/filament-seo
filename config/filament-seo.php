@@ -22,4 +22,11 @@ return [
      * az Organization és a WebSite JSON-LD blokk a globális beállításokból.
      */
     'home_route' => 'home',
+
+    /*
+     * Az OG kép feltöltéséhez és felolvasásához használt Filesystem disk.
+     * Ugyanezt olvassa a SeoManager::imageUrl() és a globális beállítások
+     * default_og_image mezője is, hogy a két feltöltési útvonal ne térjen el.
+     */
+    'og_image_disk' => 'public',
 ];

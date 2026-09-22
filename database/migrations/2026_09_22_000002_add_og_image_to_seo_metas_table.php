@@ -8,14 +8,26 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table(config('filament-seo.table_names.seo_metas', 'seo_metas'), function (Blueprint $table) {
+        $table = config('filament-seo.table_names.seo_metas', 'seo_metas');
+
+        if (Schema::hasColumn($table, 'og_image')) {
+            return;
+        }
+
+        Schema::table($table, function (Blueprint $table) {
             $table->string('og_image')->nullable();
         });
     }
 
     public function down(): void
     {
-        Schema::table(config('filament-seo.table_names.seo_metas', 'seo_metas'), function (Blueprint $table) {
+        $table = config('filament-seo.table_names.seo_metas', 'seo_metas');
+
+        if (! Schema::hasColumn($table, 'og_image')) {
+            return;
+        }
+
+        Schema::table($table, function (Blueprint $table) {
             $table->dropColumn('og_image');
         });
     }

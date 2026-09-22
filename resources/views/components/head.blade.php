@@ -28,5 +28,5 @@
 <meta property="og:url" content="{{ $seo->canonical }}">
 @endif
 @foreach ($seo->schemas as $schema)
-<script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG) !!}</script>
+<script type="application/ld+json">{!! json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_INVALID_UTF8_SUBSTITUTE) !!}</script>
 @endforeach

@@ -63,6 +63,35 @@ it('rejects invalid json in the schema markup field', function () {
         ->assertHasFormErrors(['seoMeta.schema_markup']);
 });
 
+it('rejects a scalar json literal in the schema markup field instead of throwing', function () {
+    $route = SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal']);
+
+    Livewire::test(EditSeoRoute::class, ['record' => $route->getKey()])
+        ->fillForm(['seoMeta.schema_markup' => '123'])
+        ->call('save')
+        ->assertHasFormErrors(['seoMeta.schema_markup']);
+});
+
+it('rejects a bare quoted string in the schema markup field', function () {
+    $route = SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal']);
+
+    Livewire::test(EditSeoRoute::class, ['record' => $route->getKey()])
+        ->fillForm(['seoMeta.schema_markup' => '"szöveg"'])
+        ->call('save')
+        ->assertHasFormErrors(['seoMeta.schema_markup']);
+});
+
+it('accepts a valid json object in the schema markup field', function () {
+    $route = SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal']);
+
+    Livewire::test(EditSeoRoute::class, ['record' => $route->getKey()])
+        ->fillForm(['seoMeta.schema_markup' => '{"@type": "FAQPage"}'])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($route->refresh()->seoMeta->schema_markup)->toBe(['@type' => 'FAQPage']);
+});
+
 it('does not let a save alter the label or route name', function () {
     $route = SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal']);
 

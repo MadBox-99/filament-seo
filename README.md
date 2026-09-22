@@ -66,6 +66,12 @@ hozzájuk globális alapértelmezés. Ha akár a modell, akár a route rekordja
 noindexet vagy nofollow-t ír elő, az oldal noindex/nofollow marad — a másik
 rekord "engedékenyebb" beállítása nem írja felül.
 
+A `SeoManager` egy `scoped` singleton: egy kérésen belül a `Seo::for()`/`Seo::ogImage()`
+hívások felülírják egymást (last-writer-wins), és az állapot csak az adott
+kérés végéig él — Octane vagy más hosszú életű worker esetén sem szivárog át a
+következő kérésbe. Ha ugyanabban a kérésben több modellt is fel akarsz oldani
+egymás után, hívd a `Seo::reset()`-et a modellváltás előtt.
+
 A site nevét a projekt adja meg, jellemzően az `AppServiceProvider::boot()`-ban:
 
 ```php

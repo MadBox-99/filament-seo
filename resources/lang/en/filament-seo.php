@@ -15,6 +15,7 @@ return [
         'og_image' => 'Share image (OG)',
         'schema_markup' => 'Custom JSON-LD (schema.org)',
         'schema_markup_help' => 'Optional, valid JSON. Added next to the generated structured data.',
+        'schema_markup_not_object' => 'The custom JSON-LD must be a JSON object or array, not a bare value.',
     ],
     'routes' => [
         'label' => 'Page SEO',

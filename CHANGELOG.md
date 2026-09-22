@@ -27,6 +27,32 @@
   hívásban fűzte hozzá, azokat most **törölni kell**, különben duplán jelennek meg.
 - A `SeoFields::make()` és `::schema()` új, opcionális `$defaultOgType` paramétert
   kapott. Meglévő hívások változtatás nélkül működnek.
+- A `SeoManager` bindingja `singleton`-ról `scoped`-ra változott, hogy Octane
+  (vagy más hosszú életű worker) alatt egy kérés `Seo::for()`/`Seo::ogImage()`
+  állapota ne szivárogjon át a következő kérésbe.
+
+### Fixed
+
+- A `schema_markup` mező skalár JSON literált (pl. `123`, `"szöveg"`) is
+  elfogadott, ami mentéskor `TypeError`-ral 500-as hibát okozott. A validáció
+  most elutasítja, ha a beírt JSON nem objektum vagy tömb; a dehidratáció is
+  védetté vált erre az esetre.
+- Érintetlen (alapértelmezett) globális beállítások mellett a főoldal egy
+  névtelen, üres `Organization` JSON-LD blokkot is kiírt. Ha a
+  `schema_org_data` minden mezője üres, ez a blokk most kimarad, csak a
+  `WebSite` blokk kerül ki.
+- **Az OG kép feltöltési és felolvasási diszkje mostantól egy konfigból
+  (`filament-seo.og_image_disk`, alapértelmezetten `public`) jön, mindhárom
+  helyen: `SeoFields`, `SeoManager::imageUrl()` és a globális
+  `default_og_image` feltöltés.** Korábban a globális OG kép a Filament
+  alapértelmezett diszkjére (`FILESYSTEM_DISK`) töltődött fel, a
+  `<meta property="og:image">` viszont mindig a `public` diszkről próbálta
+  felolvasni — ha a kettő eltért, a kép csendben 404-et adott. **Meglévő
+  telepítéseken előfordulhat, hogy a globális OG képet újra fel kell tölteni**,
+  mert a felolvasás diszkje most explicit.
+- Egy admin által üres tömbre (`[]`) állított modell-szintű `schema_markup` a
+  `??` operátor miatt elnyomta a route-szintű kézi JSON-LD-t. A visszaesés
+  most `filled()`-et használ, így az üres tömb üresként viselkedik.
 
 ### Known limitations
 

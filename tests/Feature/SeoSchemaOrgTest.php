@@ -25,6 +25,10 @@ beforeEach(function () {
     Seo::reset();
 });
 
+afterEach(function () {
+    SeoManager::siteNameUsing(null);
+});
+
 it('emits the organization and website blocks on the home route', function () {
     $this->get('/');
 
@@ -57,6 +61,24 @@ it('keeps zero-like values while dropping empty ones from the organization block
 
     expect($organisation)->not->toHaveKey('description')
         ->and($organisation['foundingYear'])->toBe('0');
+});
+
+it('emits only the website block for an untouched installation', function () {
+    SeoSetting::current()->update([
+        'schema_org_data' => [
+            'name' => '',
+            'url' => '',
+            'logo' => '',
+            'description' => '',
+        ],
+    ]);
+
+    $this->get('/');
+
+    $schemas = Seo::resolve()->schemas;
+
+    expect($schemas)->toHaveCount(1)
+        ->and($schemas[0]['@type'])->toBe('WebSite');
 });
 
 it('emits no global blocks outside the home route', function () {

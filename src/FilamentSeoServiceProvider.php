@@ -26,7 +26,7 @@ class FilamentSeoServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton(SeoManager::class);
+        $this->app->scoped(SeoManager::class);
     }
 
     public function packageBooted(): void

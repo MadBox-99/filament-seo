@@ -23,6 +23,10 @@ beforeEach(function () {
     Seo::reset();
 });
 
+afterEach(function () {
+    SeoManager::siteNameUsing(null);
+});
+
 it('renders the resolved title', function () {
     SeoRoute::create(['route_name' => 'home', 'label' => 'Főoldal'])
         ->seoMeta()->create(['title' => 'Kezdőlap']);
@@ -95,5 +99,17 @@ it('escapes a closing script tag inside the json-ld', function () {
 
     Seo::for($post);
 
-    expect(Blade::render('<x-filament-seo::head />'))->not->toContain('<script>alert(1)');
+    $html = Blade::render('<x-filament-seo::head />');
+
+    // JSON_HEX_TAG turns every "<" and ">" into its \uXXXX escape (built via
+    // chr(92) here so this file does not itself contain a literal backslash-u
+    // sequence that a tool or editor might helpfully "unescape").
+    $hexEscapedPayload = str_replace(
+        ['<', '>'],
+        [chr(92).'u003C', chr(92).'u003E'],
+        '</script><script>alert(1)</script>'
+    );
+
+    expect($html)->not->toContain('<script>alert(1)')
+        ->and($html)->toContain($hexEscapedPayload);
 });

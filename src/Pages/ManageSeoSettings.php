@@ -97,6 +97,7 @@ class ManageSeoSettings extends Page implements HasForms
                         Forms\Components\FileUpload::make('default_og_image')
                             ->label('Default OG Image')
                             ->image()
+                            ->disk(config('filament-seo.og_image_disk', 'public'))
                             ->directory('seo'),
                     ]),
                 Schemas\Components\Section::make('Robots.txt')
