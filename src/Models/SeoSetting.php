@@ -2,8 +2,24 @@
 
 namespace Madbox99\FilamentSeo\Models;
 
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Lásd a {@see SeoMeta} megjegyzését: a táblanév `config()`-ból jön, ezért
+ * kell felsorolni az oszlopokat.
+ *
+ * @property int $id
+ * @property string $default_title_pattern
+ * @property string|null $default_description
+ * @property string|null $default_og_image
+ * @property string|null $robots_txt
+ * @property array<int, string>|null $sitemap_excluded_urls
+ * @property string $schema_org_type
+ * @property array<string, mixed>|null $schema_org_data
+ * @property CarbonInterface|null $created_at
+ * @property CarbonInterface|null $updated_at
+ */
 class SeoSetting extends Model
 {
     protected $guarded = [];
