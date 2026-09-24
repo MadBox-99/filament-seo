@@ -175,6 +175,25 @@ it('reads the og type from the seo meta record', function () {
     expect(Seo::for($post)->resolve()->ogType)->toBe('article');
 });
 
+it('uses the og type set by the caller when no record supplies one', function () {
+    $post = Post::create(['title' => 'Cikk']);
+
+    expect(Seo::for($post)->ogType('article')->resolve()->ogType)->toBe('article');
+});
+
+it('prefers the record og type over the one set by the caller', function () {
+    $post = Post::create(['title' => 'Cikk']);
+    $post->seoMeta()->create(['og_type' => 'website']);
+
+    expect(Seo::for($post)->ogType('article')->resolve()->ogType)->toBe('website');
+});
+
+it('clears the caller supplied og type on reset', function () {
+    Seo::ogType('article');
+
+    expect(Seo::reset()->resolve()->ogType)->toBe('website');
+});
+
 it('produces no schemas outside a matched route', function () {
     expect(Seo::resolve()->schemas)->toBe([]);
 });

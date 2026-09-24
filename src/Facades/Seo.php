@@ -8,6 +8,7 @@ use Madbox99\FilamentSeo\SeoManager;
 /**
  * @method static SeoManager for(\Illuminate\Database\Eloquent\Model $model, ?string $fallbackTitle = null)
  * @method static SeoManager ogImage(?string $url)
+ * @method static SeoManager ogType(?string $type)
  * @method static SeoManager reset()
  * @method static string siteName()
  * @method static void siteNameUsing(?\Closure $callback)

@@ -21,6 +21,8 @@ class SeoManager
 
     protected ?string $ogImage = null;
 
+    protected ?string $ogType = null;
+
     public static function siteNameUsing(?Closure $callback): void
     {
         static::$siteNameResolver = $callback;
@@ -41,11 +43,19 @@ class SeoManager
         return $this;
     }
 
+    public function ogType(?string $type): static
+    {
+        $this->ogType = $type;
+
+        return $this;
+    }
+
     public function reset(): static
     {
         $this->model = null;
         $this->fallbackTitle = null;
         $this->ogImage = null;
+        $this->ogType = null;
 
         return $this;
     }
@@ -79,7 +89,11 @@ class SeoManager
                 url()->current(),
             ]),
             robots: $this->robots($modelMeta, $routeMeta),
-            ogType: $this->firstFilled([$modelMeta?->og_type, $routeMeta?->og_type]) ?? 'website',
+            ogType: $this->firstFilled([
+                $modelMeta?->og_type,
+                $routeMeta?->og_type,
+                $this->ogType,
+            ]) ?? 'website',
             ogImage: $this->imageUrl($this->firstFilled([
                 $modelMeta?->og_image,
                 $routeMeta?->og_image,
