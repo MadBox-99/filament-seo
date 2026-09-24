@@ -7,6 +7,7 @@ use Madbox99\FilamentSeo\Models\SeoMeta;
 
 trait HasSeo
 {
+    /** @return MorphOne<SeoMeta, $this> */
     public function seoMeta(): MorphOne
     {
         return $this->morphOne(SeoMeta::class, 'seoable');
