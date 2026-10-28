@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Madbox99\FilamentSeo\Data;
 
 final readonly class SeoData

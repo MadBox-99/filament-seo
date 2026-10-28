@@ -21,5 +21,4 @@ return RectorConfig::configure()
         codeQuality: true,
         codingStyle: true,
         typeDeclarations: true,
-        earlyReturn: true,
     )->withPhpSets(php83: true);
