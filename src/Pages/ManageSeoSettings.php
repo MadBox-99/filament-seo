@@ -12,6 +12,7 @@ use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas;
 use Filament\Schemas\Schema;
+use Filament\Support\Components\Attributes\Unexposed;
 use Madbox99\FilamentSeo\FilamentSeoPlugin;
 use Madbox99\FilamentSeo\Models\SeoSetting;
 use UnitEnum;
@@ -24,16 +25,25 @@ class ManageSeoSettings extends Page implements HasForms
 
     protected static string|UnitEnum|null $navigationGroup = 'SEO';
 
-    protected static ?string $navigationLabel = 'Global SEO';
-
-    protected static ?string $title = 'Global SEO Settings';
-
     protected static ?int $navigationSort = 1;
 
     protected string $view = 'filament-seo::pages.manage-seo-settings';
 
     /** @var array<string, mixed> */
     public ?array $data = [];
+
+    #[\Override]
+    public static function getNavigationLabel(): string
+    {
+        return static::$navigationLabel ?? __('filament-seo::filament-seo.settings.navigation_label');
+    }
+
+    #[\Override]
+    #[Unexposed]
+    public function getTitle(): string
+    {
+        return static::$title ?? __('filament-seo::filament-seo.settings.title');
+    }
 
     #[\Override]
     public static function getNavigationGroup(): string|UnitEnum|null
@@ -85,44 +95,44 @@ class ManageSeoSettings extends Page implements HasForms
     {
         return $form
             ->schema([
-                Schemas\Components\Section::make('Defaults')
+                Schemas\Components\Section::make(__('filament-seo::filament-seo.settings.sections.defaults'))
                     ->schema([
                         Forms\Components\TextInput::make('default_title_pattern')
-                            ->label('Title Pattern')
-                            ->helperText('Available placeholders: {title}, {site_name}'),
+                            ->label(__('filament-seo::filament-seo.settings.fields.default_title_pattern'))
+                            ->helperText(__('filament-seo::filament-seo.settings.fields.default_title_pattern_help')),
                         Forms\Components\Textarea::make('default_description')
-                            ->label('Default Meta Description')
+                            ->label(__('filament-seo::filament-seo.settings.fields.default_description'))
                             ->rows(3)
                             ->maxLength(160),
                         Forms\Components\FileUpload::make('default_og_image')
-                            ->label('Default OG Image')
+                            ->label(__('filament-seo::filament-seo.settings.fields.default_og_image'))
                             ->image()
                             ->disk(config('filament-seo.og_image_disk', 'public'))
                             ->directory('seo'),
                     ]),
-                Schemas\Components\Section::make('Robots.txt')
+                Schemas\Components\Section::make(__('filament-seo::filament-seo.settings.sections.robots_txt'))
                     ->schema([
                         Forms\Components\Textarea::make('robots_txt')
-                            ->label('robots.txt Content')
+                            ->label(__('filament-seo::filament-seo.settings.fields.robots_txt'))
                             ->rows(8),
                     ]),
-                Schemas\Components\Section::make('Sitemap')
+                Schemas\Components\Section::make(__('filament-seo::filament-seo.settings.sections.sitemap'))
                     ->schema([
                         Forms\Components\TagsInput::make('sitemap_excluded_urls')
-                            ->label('Excluded URLs from Sitemap'),
+                            ->label(__('filament-seo::filament-seo.settings.fields.sitemap_excluded_urls')),
                     ]),
-                Schemas\Components\Section::make('Schema.org')
+                Schemas\Components\Section::make(__('filament-seo::filament-seo.settings.sections.schema_org'))
                     ->schema([
                         Forms\Components\Select::make('schema_org_type')
-                            ->label('Schema Type')
+                            ->label(__('filament-seo::filament-seo.settings.fields.schema_org_type'))
                             ->options([
-                                'Organization' => 'Organization',
-                                'LocalBusiness' => 'LocalBusiness',
-                                'Corporation' => 'Corporation',
-                                'Person' => 'Person',
+                                'Organization' => __('filament-seo::filament-seo.settings.schema_org_types.Organization'),
+                                'LocalBusiness' => __('filament-seo::filament-seo.settings.schema_org_types.LocalBusiness'),
+                                'Corporation' => __('filament-seo::filament-seo.settings.schema_org_types.Corporation'),
+                                'Person' => __('filament-seo::filament-seo.settings.schema_org_types.Person'),
                             ]),
                         Forms\Components\KeyValue::make('schema_org_data')
-                            ->label('Schema.org Data'),
+                            ->label(__('filament-seo::filament-seo.settings.fields.schema_org_data')),
                     ]),
             ])
             ->statePath('data');
@@ -143,13 +153,13 @@ class ManageSeoSettings extends Page implements HasForms
             'schema_org_data' => $data['schema_org_data'] ?? [],
         ]);
 
-        Notification::make()->title('Settings saved.')->success()->send();
+        Notification::make()->title(__('filament-seo::filament-seo.settings.notifications.saved'))->success()->send();
     }
 
     protected function getFormActions(): array
     {
         return [
-            Action::make('save')->label('Save')->submit('save'),
+            Action::make('save')->label(__('filament-seo::filament-seo.settings.actions.save'))->submit('save'),
         ];
     }
 }

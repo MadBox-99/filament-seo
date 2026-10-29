@@ -4,7 +4,7 @@
 
         <div class="mt-6 flex justify-end">
             <x-filament::button type="submit">
-                Save
+                {{ __('filament-seo::filament-seo.settings.actions.save') }}
             </x-filament::button>
         </div>
     </form>
