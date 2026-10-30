@@ -28,4 +28,36 @@ return [
             'updated_at' => 'Modified',
         ],
     ],
+    'settings' => [
+        'navigation_label' => 'Global SEO',
+        'title' => 'Global SEO Settings',
+        'sections' => [
+            'defaults' => 'Defaults',
+            'robots_txt' => 'Robots.txt',
+            'sitemap' => 'Sitemap',
+            'schema_org' => 'Schema.org',
+        ],
+        'fields' => [
+            'default_title_pattern' => 'Title Pattern',
+            'default_title_pattern_help' => 'Available placeholders: {title}, {site_name}',
+            'default_description' => 'Default Meta Description',
+            'default_og_image' => 'Default OG Image',
+            'robots_txt' => 'robots.txt Content',
+            'sitemap_excluded_urls' => 'Excluded URLs from Sitemap',
+            'schema_org_type' => 'Schema Type',
+            'schema_org_data' => 'Schema.org Data',
+        ],
+        'schema_org_types' => [
+            'Organization' => 'Organization',
+            'LocalBusiness' => 'LocalBusiness',
+            'Corporation' => 'Corporation',
+            'Person' => 'Person',
+        ],
+        'actions' => [
+            'save' => 'Save',
+        ],
+        'notifications' => [
+            'saved' => 'Settings saved.',
+        ],
+    ],
 ];
